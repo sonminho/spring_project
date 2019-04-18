@@ -1,0 +1,64 @@
+package edu.autocar.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import edu.autocar.domain.PageInfo;
+import edu.autocar.domain.ReplyVO;
+import edu.autocar.service.ReplyService;
+
+
+@Controller
+public class HomeController {
+	
+	@Autowired
+	ReplyService service;
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	@GetMapping("/hello")
+	public String hello(Model model) {
+		logger.info("/hello 호출");
+		
+		model.addAttribute("name", "hong");
+		return "hello";
+	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home() {
+//		logger.info("Welcome home! The client locale is {}.", locale);
+//		
+//		Date date = new Date();
+//		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+//		
+//		String formattedDate = dateFormat.format(date);
+//		
+//		model.addAttribute("serverTime", formattedDate );
+		
+		return "redirect:/board/list";
+	}
+	
+	@RequestMapping(value = "/test/{page}", method = RequestMethod.GET)
+	public String ajaxTest(Model model, @PathVariable int page) throws Exception {
+		PageInfo<ReplyVO> pi = service.getPage(22, page);
+		
+		System.out.println(pi);
+		
+		model.addAttribute("pi", pi);
+		return "reply/test";
+	}
+	
+	@GetMapping("/naver")
+	public String test() {
+		return "naver/reversegocoder";
+	}
+}

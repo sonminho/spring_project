@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.autocar.dao.BoardDao">
+	<select id="count" resultType="int"> SELECT count(*) FROM board
+	</select> <!-- 목록용으로 content 컬럼은 제외, @Param()을 사용해서 parameterType 설정 없음 #{start}는 @Param("start")와 
+		연계, #{end}는 @Param("end")와 연계 -->
+	<select id="getPage" resultType="Board"> SELECT board_id, title, writer,
+		read_cnt, reg_date FROM ( SELECT ROW_NUMBER() OVER (ORDER BY reg_date
+		DESC) AS SEQ, board_id, title, writer, read_cnt, reg_date FROM board )
+		WHERE SEQ BETWEEN #{start} AND #{end} ORDER BY board_id DESC
+	</select>
+	
+	<select id="findById" parameterType="int" resultType="Board"> SELECT *
+		FROM board WHERE board_id=#{boardId}
+	</select> <!-- insert시 sequence가 발급하는 board_id 값을 받아 board 객체에 설정 -->
+	
+	<insert id="insert" parameterType="Board"
+		useGeneratedKeys="true" keyColumn="board_id" keyProperty="boardId"> insert into
+		board (board_id, title, writer, password, read_cnt, content, reg_date,
+		update_date) values(board_SEQ.NEXTVAL, #{title}, #{writer},
+		#{password}, 0, #{content}, sysdate, sysdate)
+	</insert>
+	
+	<!-- 게시글 조회수 증가 : 게시글 보기 할 때마다 호출 -->
+	<update id="increaseReadCnt" parameterType="int"> UPDATE board SET
+		read_cnt = read_cnt + 1 WHERE board_id=#{boardId}
+	</update> <!-- 게시글 수정 , 비밀번호를 아는 경우에 수정 가능 -->
+	
+	<update id="update" parameterType="Board"> UPDATE board SET title =
+		#{title}, content = #{content}, update_date = sysdate WHERE
+		board_id=#{boardId} and password=#{password}
+	</update> <!-- 게시글 삭제 , 비밀번호를 아는 경우에 삭제 가능 -->
+	
+	<delete id="delete"> 
+		DELETE FROM board WHERE board_id=#{boardId}
+		and 
+		password=#{password}
+	</delete>
+</mapper>

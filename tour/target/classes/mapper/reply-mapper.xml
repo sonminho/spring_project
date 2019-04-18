@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.autocar.dao.ReplyDao">
+	
+	<select id="count" resultType="int">
+		SELECT count(*) FROM tbl_reply where bno = #{bno}
+	</select>
+	
+	<select id="list" resultType="ReplyVO">
+		select
+		*
+		from tbl_reply
+		where bno = #{boardId}
+		order by rno desc
+	</select>
+	
+	<select id="getPage" resultType="ReplyVO">
+		SELECT 
+		rno, bno, replytext, replyer, regdate, updatedate
+		FROM ( SELECT ROW_NUMBER() OVER (ORDER BY regdate
+		DESC) AS SEQ, bno, rno, replytext, replyer, regdate, updatedate FROM tbl_reply )
+		WHERE SEQ BETWEEN #{start} AND #{end} AND bno = #{bno} ORDER BY rno DESC
+	</select>
+	
+	<insert id="insert" parameterType="ReplyVO">
+		insert into tbl_reply(rno, bno, replytext, replyer)
+		values (REPLY_SEQ.NEXTVAL, #{bno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<insert id="update" parameterType="ReplyVO">
+		update tbl_reply set replytext = #{replytext}, updatedate = sysdate where rno = #{rno}
+	</insert>
+	
+	<delete id="delete">
+		delete from tbl_reply where rno=#{rno}
+	</delete>
+</mapper>
