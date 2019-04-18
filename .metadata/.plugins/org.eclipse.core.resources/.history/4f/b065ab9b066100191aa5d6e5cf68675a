@@ -1,0 +1,37 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+public class Main {
+	static class Node {
+		int x, y;
+		
+		Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	static int n, m, h;
+	static int[][] a;
+	static ArrayList<Node> list;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stk = new StringTokenizer(br.readLine(), " ");
+		n = Integer.parseInt(stk.nextToken());
+		m = Integer.parseInt(stk.nextToken());
+		h = Integer.parseInt(stk.nextToken());
+		
+		a = new int[n+1][m+1];
+		
+		for(int i = 0; i < m; i++) {
+			stk = new StringTokenizer(br.readLine(), " ");
+			list.add(new Node(Integer.parseInt(stk.nextToken()), Integer.parseInt(stk.nextToken()));
+		}
+	}
+}

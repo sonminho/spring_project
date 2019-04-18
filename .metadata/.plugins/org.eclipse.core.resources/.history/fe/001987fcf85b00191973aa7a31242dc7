@@ -1,0 +1,8 @@
+import java.util.Observer;
+
+import org.springframework.stereotype.Component;
+
+@Component("camera")
+public class SingleCameraView extends MjpegView implements Observer {
+	
+}

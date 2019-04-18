@@ -1,0 +1,16 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
+public class JpgImageSource extends Observable {
+	String[] images = {
+			"irin1.jpg",
+			"irin2.jpg",
+			"irin3.jpg",
+			"irin4.jpg"
+	};
+	
+	int ix = -1;
+	
+	List<byte[]> imageByteList = new ArrayList<Byte[]>();
+}

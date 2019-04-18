@@ -1,0 +1,24 @@
+import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.view.AbstractView;
+
+abstract public class MjpegView extends AbstractView {
+	protected void setHeader(HttpServletResponse response) {
+		response.setHeader("Cache-Control", "no-cache, private");
+		response.setContentType("multipart/x-mixed-replace; boundary=--boundary");
+	}
+	
+	public static final String NL = "\r\n";
+	public static final String BOUNDARY = "--boundary";
+	public static final String HEAD = BOUNDARY + NL + "Content-Type: image/jpeg" + NL + "Content-Length: ";
+	
+	public void sendImage(OutputStream os, byte[] image) throws Exception {
+		int size = image.length;
+		os.write((HEAD + size + NL + NL).getBytes());
+		os.write(image);
+		os.flush();
+		os.write((NL+NL).getBytes());
+	}
+}

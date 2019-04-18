@@ -1,0 +1,19 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+public class Main {
+	static int n, m, h;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stk = new StringTokenizer(br.readLine(), " ");
+		n = Integer.parseInt(stk.nextToken());
+		m = Integer.parseInt(stk.nextToken());
+		h = Integer.parseInt(stk.nextToken());
+	}
+}

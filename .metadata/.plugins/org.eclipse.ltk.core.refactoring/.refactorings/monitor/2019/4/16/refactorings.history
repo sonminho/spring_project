@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;EchoHandler.java&apos; to &apos;monitor/src/main/java/edu.autocar.handler&apos;&#x0D;&#x0A;- Original project: &apos;monitor&apos;&#x0D;&#x0A;- Destination element: &apos;monitor/src/main/java/edu.autocar.handler&apos;&#x0D;&#x0A;- Original element: &apos;edu.autocar.view.EchoHandler.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src\/main\/java&lt;edu.autocar.handler" element1="/src\/main\/java&lt;edu.autocar.view{EchoHandler.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1555312075690" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,16 @@
+package edu.autocar.view;
+
+public class IpCamView {
+	private InputStream httpIn;
+	private ByteArrayOutputStream jpgOut;
+	String ipCamUrl = "ipcam 주소";
+
+	// 웹 캠 접속
+	@Override
+	protected void init(Map<String, Object> model, HttpServletResponse response) throws Exception {
+		super.init(model, response);
+		URL url = new URL(ipCamUrl);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		httpIn = new BufferedInputStream(conn.getInputStream(), 8192);
+	}
+}

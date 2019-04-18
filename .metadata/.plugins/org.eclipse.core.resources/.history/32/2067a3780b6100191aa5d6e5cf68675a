@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+public class Main {
+	static class Node {
+		int x, y;
+		
+		Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	static int n, m, h; // n 가로선, m 세로선
+	static int[][] a, temp;
+	static ArrayList<Node> list;
+	
+	static void down(int y) {
+		int r = 1;
+		while(r <= m) {
+			
+		}
+	}
+	
+	static void copy() {
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				temp[i][j] = a[i][j];
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stk = new StringTokenizer(br.readLine(), " ");
+		n = Integer.parseInt(stk.nextToken());
+		m = Integer.parseInt(stk.nextToken());
+		h = Integer.parseInt(stk.nextToken());
+		
+		a = new int[n+1][m+1];
+		
+		for(int i = 0; i < m; i++) {
+			stk = new StringTokenizer(br.readLine(), " ");
+			int x = Integer.parseInt(stk.nextToken());
+			int y = Integer.parseInt(stk.nextToken());
+			list.add(new Node(x, y));
+			a[x][y] = 1;
+			a[x][y] = 2;
+		}
+		
+		
+	}
+}

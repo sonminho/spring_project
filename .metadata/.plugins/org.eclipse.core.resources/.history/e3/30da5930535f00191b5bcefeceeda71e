@@ -1,0 +1,34 @@
+package edu.autocar.handler;
+
+import java.util.List;
+
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.google.gson.Gson;
+
+import edu.autocar.domain.CarMessage;
+
+public class CarHandler extends TextWebSocketHandler {
+	
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		String rcvMsg = message.getPayload();
+		Gson gson = new Gson();
+		CarMessage carMsg = gson.fromJson(rcvMsg, CarMessage.class);
+		int target = carMsg.getTarget();
+		
+		if( carMsg.getMsgType().contentEquals("POSITION_SUB")) {
+			addObserver(target, session);
+		} else if(carMsg.getMsgType().equals("POSITION")) {
+			List<WebSocketSession> list = map.get(target);
+			
+			if(list != null) {
+				for(WebSocketSession s : list) {
+					s.sendMessage(message);
+				}
+			}
+		}
+	}
+}

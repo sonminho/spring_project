@@ -1,0 +1,77 @@
+package edu.autocar.handler;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.google.gson.Gson;
+
+import edu.autocar.domain.CarMessage;
+
+public class EchoHandler extends TextWebSocketHandler {
+	List<WebSocketSession> list = new ArrayList<>();
+	
+	Map<Integer, List<WebSocketSession>> map = Collections.synchronizedMap(new HashMap<>());
+	/*
+	  메세지 정의
+		  {
+			  msgType :  "POSITION" / "CONTROL"
+			  target :
+			  lat :
+			  lng :
+			  .
+			  .
+			  .
+		  }
+	 */
+	
+	// 접속 성공시 호출
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		System.out.println("접속하셨음");
+		list.add(session);
+	}
+	
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		String rcvMsg = message.getPayload();
+		Gson gson = new Gson();
+		CarMessage carMsg = gson.fromJson(rcvMsg, CarMessage.class);
+		int target = carMsg.getTarget();
+		
+		if( carMsg.getMsgType().contentEquals("POSITION_SUB")) {
+			addObserver(target, session);
+		} else if(carMsg.getMsgType().equals("POSITION")) {
+			List<WebSocketSession> list = map.get(target);
+			
+			if(list != null) {
+				for(WebSocketSession s : list) {
+					s.sendMessage(message);
+				}
+			}
+		}
+	}
+	
+	private void addObserver(int target, WebSocketSession session) {
+		List<WebSocketSession> list = map.get(target);
+		
+		if(list == null) {
+			list = new LinkedList<>();
+		}
+		
+	}
+
+	// 접속 해제시 호출
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		System.out.println("접속 끊으심");
+	}
+}

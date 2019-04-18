@@ -1,0 +1,29 @@
+package edu.autocar.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class CameraController {
+
+	@GetMapping("/monitor")
+	public void monitor() {
+		System.out.println("모니터");
+	}
+
+	@GetMapping("/camera")
+	public void camera() {
+		System.out.println("카메라");
+	}
+
+//	@PostMapping("/camera/{cameraId}")
+//	@ResponseBody
+//	public String camera(@PathVariable("cameraId") int cameraId, Model model) {
+//		model.addAttribute("deviceId", cameraId);
+//		return "camera";
+//	}
+}

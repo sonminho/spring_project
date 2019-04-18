@@ -1,0 +1,61 @@
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class JpgImageSource extends Observable {
+	String[] images = { "irin1.jpg", 
+			"irin2.jpg", 
+			"irin3.jpg", 
+			"irin4.jpg" };
+
+	int ix = -1;
+
+	List<byte[]> imageByteList = new ArrayList<byte[]>();
+
+	public byte[] readImage(String fname) throws Exception {
+		System.out.println("이미지 읽기 시도");
+		Path path = Paths.get("c:/temp", fname); // c:/temp 에 이미지 존재
+		
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
+			Files.copy(path, baos);
+			return baos.toByteArray();
+		}
+	}
+
+	@PostConstruct
+	public void init() {
+		System.out.println("sdfiosjfeoj");
+		for (String name : images) {
+			try {
+				imageByteList.add(readImage(name));
+			} catch (Exception ex) {
+				System.err.println("There was a problem loading the images.");
+			}
+		}
+		new Thread(this::run).start();
+	}
+	
+	public void run() {
+		try {
+			while(true) {
+				Thread.sleep(1000);
+				ix = (ix + 1) % images.length;
+				byte[] image = imageByteList.get(ix);
+				
+				setChanged();
+				notifyObservers(image);
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}

@@ -1,0 +1,66 @@
+package edu.autocar.handler;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.google.gson.Gson;
+
+import edu.autocar.domain.CarMessage;
+
+public class CarHandler extends TextWebSocketHandler {
+	Map<Integer, List<WebSocketSession>> map = Collections.synchronizedMap(new HashMap<>());
+
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		String rcvMsg = message.getPayload();
+		Gson gson = new Gson();
+		CarMessage carMsg = gson.fromJson(rcvMsg, CarMessage.class);
+		int target = carMsg.getTarget();
+		System.out.println(session);
+		
+		if (carMsg.getMsgType().contentEquals("POSITION_SUB")) {
+			System.out.println("옵저버 등록합니다 " + session);
+			addObserver(target, session);
+		} else if (carMsg.getMsgType().equals("POSITION")) {
+			List<WebSocketSession> list = map.get(target);
+
+			if (list != null) {
+				for (WebSocketSession s : list) {
+					if (s != session)
+						s.sendMessage(message);
+				}
+			}
+		}
+	}
+
+	private void addObserver(int target, WebSocketSession session) {
+		List<WebSocketSession> list = map.get(target);
+
+		if (list == null) {
+			list = new LinkedList<>();
+			map.put(target, list);
+		}
+		list.add(session);
+	}
+
+	// 접속 해제시 호출
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		super.afterConnectionClosed(session, status);
+
+		for (int target : map.keySet()) {
+			List<WebSocketSession> list = map.get(target);
+			if (list.remove(session)) {
+				break;
+			}
+		}
+	}
+}

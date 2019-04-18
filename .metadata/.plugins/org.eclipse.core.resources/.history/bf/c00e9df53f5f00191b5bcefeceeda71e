@@ -1,0 +1,5 @@
+package edu.autocar.basic.config;
+
+public class WebSocketConfig {
+
+}

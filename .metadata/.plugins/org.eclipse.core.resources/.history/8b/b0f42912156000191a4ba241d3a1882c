@@ -1,0 +1,158 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+public class Main {
+	static int[] dx = { -1, 1, 0, 0 };
+	static int[] dy = { 0, 0, 1, -1 };
+	static int r, c, m;
+	static ArrayList<Integer> removeList;
+	static Shark[][] a;
+	static int ans = 0;
+	
+	static HashMap<Integer, Shark> map = new HashMap<>();
+	
+	static class Shark {
+		int r, c, s, d, z, no;
+
+		Shark(int r, int c, int s, int d, int z, int no) {
+			this.r = r;
+			this.c = c;
+			this.s = s; // 속력
+			this.d = d; // 방향
+			this.z = z; // 상어 크기
+			this.no = no; // 상어 번호
+		}
+
+		@Override
+		public String toString() {
+			return r + "" + c + "" + s + "" + z;
+		}
+	}
+	
+	static void move2() {		
+		Iterator<Integer> keys = map.keySet().iterator();
+		removeList = new ArrayList<>();
+		
+		while(keys.hasNext()) {
+			int key = keys.next();
+			Shark shark = map.get(key);
+			
+			a[shark.r][shark.c] = null;
+			for (int s = 0; s < shark.s; s++) {
+				int dir = shark.d;
+
+				if (dir == 1) {
+					if (shark.r - 1 < 1) {
+						shark.r += 1;
+						shark.d = 2;
+					} else {
+						shark.r -= 1;
+					}
+				} else if (dir == 2) {
+					if (shark.r + 1 > r) {
+						shark.r -= 1;
+						shark.d = 1;
+					} else {
+						shark.r += 1;
+					}
+				} else if (dir == 3) {
+					if (shark.c + 1 > c) {
+						shark.c -= 1;
+						shark.d = 4;
+					} else {
+						shark.c += 1;
+					}
+				} else {
+					if (shark.c - 1 < 1) {
+						shark.c += 1;
+						shark.d = 3;
+					} else {
+						shark.c -= 1;
+					}
+				}
+			}
+			
+			if(a[shark.r][shark.c] == null) {
+				a[shark.r][shark.c] = shark;
+				map.put(key, shark);
+			} else {
+				if (a[shark.r][shark.c].z < shark.z) { // 기존에 있던 상어보다 클 경우
+					//map.remove(a[shark.r][shark.c].no);
+					removeList.add(a[shark.r][shark.c].no);
+					System.out.println(shark.z +"가 "+ a[shark.r][shark.c].z + "를 먹습니다." + map.size());
+					a[shark.r][shark.c] = shark;
+					map.put(key, shark);				
+				} else if(a[shark.r][shark.c].z > shark.z){ // 기존 상어가 더 클 경우
+					//map.remove(shark.no);
+					removeList.add(shark.no);
+					System.out.println(a[shark.r][shark.c].z +"가 "+ shark.z + "를 먹습니다." + map.size());					
+				}
+			}
+		}
+		
+		for(int x : removeList) {
+			map.remove(x);
+		}
+	}
+	
+	
+	static void print() {
+		for (int i = 1; i <= r; i++) {
+			System.out.println();
+			for (int j = 1; j <= c; j++) {
+				System.out.print(a[i][j] + "\t");
+			}
+		}
+	}
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stk = new StringTokenizer(br.readLine(), " ");
+
+		r = Integer.parseInt(stk.nextToken());
+		c = Integer.parseInt(stk.nextToken());
+		m = Integer.parseInt(stk.nextToken());
+		a = new Shark[r+1][c+1];
+		
+		for (int i = 0; i < m; i++) {
+			stk = new StringTokenizer(br.readLine(), " ");
+			int x =Integer.parseInt(stk.nextToken());
+			int y =Integer.parseInt(stk.nextToken());
+			Shark shark = new Shark(x, 
+					y,
+					Integer.parseInt(stk.nextToken()), 
+					Integer.parseInt(stk.nextToken()),
+					Integer.parseInt(stk.nextToken()),
+					i);		
+			a[x][y] = shark;
+			
+			map.put(i, shark);
+		}
+
+		for (int j = 1; j <= c; j++) {
+			for(int i = 1; i <= r; i++) {
+				if(a[i][j] != null) { // 제일 가까운 상어
+					ans += a[i][j].z; // 상어 크기를 더함
+					System.out.println(j+"에서 "+a[i][j].z +" 상어를 잡았습니다." +map.size());
+					map.remove(a[i][j].no);
+					System.out.println("상어를 잡은 후 사이즈 " + map.size());
+					a[i][j] = null;
+					break;
+				}
+			}
+			System.out.println();
+			print();
+			System.out.println();
+			move2();
+			System.out.println();
+			print();
+		}
+		
+		print();
+		System.out.println(ans);
+	}
+}

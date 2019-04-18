@@ -1,0 +1,25 @@
+import java.util.Observable;
+import java.util.Observer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component("camera")
+public class SingleCameraView extends MjpegView implements Observer {
+	
+	@Autowired // 타입으로 컨테이너에서 빈 검색
+	JpgImageSource source;
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected byte[] getImage() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}
