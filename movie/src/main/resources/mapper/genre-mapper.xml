@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="son.minho.dao.GenreDao">
+	<select id="count" resultType="int">
+		select count(*) from genre
+	</select>
+	
+	<select id="getPage" resultType="Genre">
+		SELECT id, name
+		FROM ( SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS SEQ, id, name FROM genre )
+		WHERE SEQ BETWEEN #{start} AND #{end}
+	</select>
+</mapper>
