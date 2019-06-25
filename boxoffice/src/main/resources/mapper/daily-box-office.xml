@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="multi.campus.dao.DailyBoxOfficeDao">
+	<select id="getAllDailyBoxOffice" resultType="DailyBoxOffice">
+		select * from daily_box_office
+	</select>
+	
+	<insert id="insert" parameterType="DailyBoxOffice">
+		insert into DAILY_BOX_OFFICE(movie_cd, movie_nm, rank, rank_inten, rank_old_and_new, open_dt, sales_acc, audi_cnt, audi_acc)
+    	values (#{movieCd}, #{movieNm}, #{rank}, #{rankInten}, #{rankOldAndNew}, #{openDt}, #{salesAcc}, #{audiCnt}, #{audiAcc})
+	</insert>
+	
+	<delete id="deleteAllBoxOffce">
+		delete from daily_box_office
+	</delete>
+</mapper>

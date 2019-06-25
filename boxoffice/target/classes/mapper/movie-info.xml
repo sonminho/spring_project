@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="multi.campus.dao.MovieInfoDao">
+	<insert id="insert" parameterType="MovieInfo">
+		insert into movie_info(movie_cd, movie_nm, prdt_year, open_dt, director_nm)
+		values (#{movieCd}, #{movieNm}, #{prdtYear}, #{openDt}, #{directorNm})
+	</insert>
+	
+	<insert id="insertGenre" parameterType="MovieGenre">
+		insert into movie_genre(movie_cd, genre_nm) values(#{movieCd}, #{genreNm})
+	</insert>
+	
+	<insert id="insertActor" parameterType="MovieActor">
+		insert into movie_actor(movie_cd, actor_nm) values(#{movieCd}, #{actorNm})
+	</insert>
+</mapper>
